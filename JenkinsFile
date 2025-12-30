@@ -36,9 +36,9 @@ pipeline {
             }
         }
     }
-    post {
+   post {
     always {
-        junit 'junit.xml'
+        junit 'coverage/junit.xml'  // must match outputName & outputDirectory
     }
 }
 
