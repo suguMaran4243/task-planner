@@ -57,10 +57,10 @@ pipeline {
             }
         }
     }
-   post {
-    always {
-        junit 'coverage/junit.xml'  // must match outputName & outputDirectory
-    }
-}
+//    post {
+//     always {
+//         junit 'coverage/junit.xml'  // must match outputName & outputDirectory
+//     }
+// }
 
 }
