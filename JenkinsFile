@@ -1,11 +1,6 @@
         pipeline {
             agent any
-            // environment {
-            //     // NETLIFY_SITE_ID = '9c0ddcf5-99e7-4baa-bfdc-ef5b170037e3'
-            //     // NETLIFY_AUTH_TOKEN = credentials('my-token')
-            //     // NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt"
-            // }
-
+        
             stages {
                 stage('Build') {
                     agent{
@@ -16,10 +11,7 @@
                     }
                     steps {
                     sh '''
-                        ls -la
-                        node -v
-                        npm -v
-                        npm i
+                        echo 'Build the application is started"
                         npm run build
                     '''
                     }
@@ -37,8 +29,6 @@
                     }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                    // some block
-
                         sh '''
                             echo "Hello Sugu"
                             aws --version
@@ -65,23 +55,7 @@
                     '''
                     }
                 }
-                //  stage('Deploy') {
-                //     agent{
-                //         docker{
-                //             image 'node:18-alpine'
-                //             reuseNode true
-                //         }
-                //     }
-                //     steps {
-                //        sh '''
-                //             npm install netlify-cli
-                //             node_modules/.bin/netlify --version
-                //             echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-                //             node_modules/.bin/netlify status
-                //             node_modules/.bin/netlify deploy --dir=build --prod
-                //        '''
-                //     }
-                // }
+             
             }
         //    post {
         //     always {
