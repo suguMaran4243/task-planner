@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        NETLIFY_SITE_ID = '9c0ddcf5-99e7-4baa-bfdc-ef5b170037e3'
-        NETLIFY_AUTH_TOKEN = credentials('my-token')
-        NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt"
+        // NETLIFY_SITE_ID = '9c0ddcf5-99e7-4baa-bfdc-ef5b170037e3'
+        // NETLIFY_AUTH_TOKEN = credentials('my-token')
+        // NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt"
     }
 
     stages {
