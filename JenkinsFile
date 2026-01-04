@@ -11,7 +11,7 @@
                     }
                     steps {
                     sh '''
-                        echo 'Build the application is started"
+                        echo "Build the application is started"
                         npm run build
                     '''
                     }
