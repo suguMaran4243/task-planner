@@ -41,6 +41,11 @@
                 
                 stage('Test')
                 {
+                    when{
+                        expression{
+                            ENVIRONMENT == 'testing'
+                        }
+                    }
                     agent{
                         docker{
                             image 'node:18-alpine'
