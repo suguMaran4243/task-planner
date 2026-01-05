@@ -1,74 +1,76 @@
-        pipeline {
-            agent any
-            environment{
-                ENVIRONMENT = 'testing'
-            }
-        
-            stages {
-                stage('Build') {
-                    agent{
-                        docker{
-                        image 'node:18-alpine'
-                        reuseNode true
-                        }
-                    }
-                    steps {
-                    sh '''
-                        echo "Build the application is started"
-                        npm run build
-                    '''
-                    }
+            pipeline {
+                agent any
+                environment{
+                    ENVIRONMENT = 'testing'
                 }
-                stage('AWS') {
-                    agent {
-                        docker {
-                            image 'amazon/aws-cli'
-                            reuseNode true
-                            args "--entrypoint=''"
-                        }
-                    }
-                    environment{
-                        AWS_S3_BUCKET = 'task-planner-4012026'
-                    }
-                    steps {
-                        withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                        sh '''
-                            echo "Hello Sugu"
-                            aws --version
-                            echo "Hello S3!" > index.html
-                            aws s3 sync build s3://$AWS_S3_BUCKET
-                        '''
-                    }
-                }
-                }
-                
-                stage('Test')
-                {
-                    when{
-                        expression{
-                            ENVIRONMENT == 'testing'
-                        }
-                    }
-                    agent{
-                        docker{
+            
+                stages {
+                    stage('Build') {
+                        agent{
+                            docker{
                             image 'node:18-alpine'
                             reuseNode true
+                            }
+                        }
+                        steps {
+                        sh '''
+                            echo "Build the application is started"
+                            npm run build
+                        '''
                         }
                     }
-                    steps{
-                    sh '''
-                        echo "Testing in-progess"
-                        npm run test:ci
-                        echo "Testing completed"
-                    '''
+                    stage('AWS') {
+                        agent {
+                            docker {
+                                image 'amazon/aws-cli'
+                                reuseNode true
+                                args "--entrypoint=''"
+                            }
+                        }
+                        environment{
+                            AWS_S3_BUCKET = 'task-planner-4012026'
+                        }
+                        steps {
+                            withCredentials([usernamePassword(credentialsId: 'my-aws-token', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                            sh '''
+                                echo "Hello Sugu"
+                                aws --version
+                                echo "Hello S3!" > index.html
+                                aws s3 sync build s3://$AWS_S3_BUCKET
+                            '''
+    }
+                        
+                        }
                     }
+                    
+                    
+                    stage('Test')
+                    {
+                        when{
+                            expression{
+                                ENVIRONMENT == 'testing'
+                            }
+                        }
+                        agent{
+                            docker{
+                                image 'node:18-alpine'
+                                reuseNode true
+                            }
+                        }
+                        steps{
+                        sh '''
+                            echo "Testing in-progess"
+                            npm run test:ci
+                            echo "Testing completed"
+                        '''
+                        }
+                    }
+                
                 }
-             
-            }
-        //    post {
-        //     always {
-        //         junit 'coverage/junit.xml'  // must match outputName & outputDirectory
-        //     }
-        // }
+            //    post {
+            //     always {
+            //         junit 'coverage/junit.xml'  // must match outputName & outputDirectory
+            //     }
+            // }
 
-        }
+            }
