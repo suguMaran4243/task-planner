@@ -5,6 +5,21 @@
                 }
             
                 stages {
+                     stage('Install') {
+                        agent{
+                            docker{
+                            image 'node:18-alpine'
+                            reuseNode true
+                            }
+                        }
+                        steps {
+                        sh '''
+                            echo "Installing the required dependencies"
+                            npm install
+                        '''
+                        }
+                    }
+
                     stage('Build') {
                         agent{
                             docker{
@@ -35,15 +50,12 @@
                             sh '''
                                 echo "Hello Sugu"
                                 aws --version
-                                echo "Hello S3!" > index.html
                                 aws s3 sync build s3://$AWS_S3_BUCKET
                             '''
-    }
-                        
+                        }                        
                         }
                     }
-                    
-                    
+                                        
                     stage('Test')
                     {
                         when{
